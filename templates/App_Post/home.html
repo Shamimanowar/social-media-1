@@ -1,0 +1,78 @@
+{% extends 'navbar.html' %}
+{% block title_block %} {{title}} {% endblock %}
+{% block css_block %}
+
+{% endblock %}
+
+{% block body_block %}
+{% if search %}
+  {% for user in result %}
+
+    <div class="row">
+      <div class="col-sm-4">
+        {% if user.user_profile.profile_pic %}
+        <img src="/media/{{user.user_profile.profile_pic}}" alt="" width='60px' height='60px' class='rounded-circle'>
+        {% else %}
+        <img src="/media/default.jpg" alt="" width='60px' height='60px' class='rounded-circle'>
+        {% endif %}
+      </div>
+      <div class="col-sm-8">
+        <a href="{% url 'App_Login:user' username=user.username %}">{{user.username}}</a><br>
+        {{user.user_profile.full_name}}
+        <br>
+      </div>
+    </div>
+
+  {% endfor %}
+{% else %}
+
+<marquee><h2 style='font-family: georgia'>All of the posts of your friends are appear here !</h2></marquee>
+<br><br>
+
+
+{% for post in posts %}
+  <div class='row'>
+    <div class="col-sm-8" style='border: 1px solid #ddd; padding:20px;'>
+      {% if post.author.user_profile.profile_pic %}
+        <img src="/media/{{post.author.user_profile.profile_pic}}" alt="UserPhoto" width='50px' height='50px' class='rounded-circle'>
+      {% else %}
+        <img src="/media/default.jpg" alt="" width='50px' height='50px' class='rounded-circle'>
+      {% endif %}
+      <a href="{% url 'App_Login:user' username=post.author %}">{{post.author}}</a>
+      <h5>{{post.caption}}</h5>
+      <img src="/media/{{post.image}}" alt="" width='100%'>
+
+      <!-- love signs are here -->
+      <div class="" style='padding: 20px'>
+        {% if post.pk in liked_post_list %}
+          <a href="{% url 'App_Post:unlike' pk=post.pk %}"><i class="fas fa-heart" style='font-size: 40px; float: left'></i></a>
+        {% else %}
+          <a href="{% url 'App_Post:like' pk=post.pk %}"><i class="far fa-heart" style='font-size: 40px; float: left'></i></a>
+        {% endif %}
+
+        <!-- Number of likes is here -->
+        <p style='float: left; margin-left: 40px'> {{post.liked_post.count}} likes</p>
+      </div>
+
+    </div>
+    <div class="col-sm-4">
+      <div class="row" style='padding-left: 20px'>
+        <div class="col-sm-4">
+          {% if user.user_profile.profile_pic %}
+          <img src="/media/{{user.user_profile.profile_pic}}" alt="" width='60px' height='60px' class='rounded-circle'>
+          {% else %}
+          <img src="/media/default.jpg" alt="" width='60px' height='60px' class='rounded-circle'>
+          {% endif %}
+        </div>
+        <div class="col-sm-8">
+          {{user.username}}<br>
+          {{user.user_profile.full_name}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <br><br>
+{% endfor %}
+
+{% endif %}
+{% endblock %}
